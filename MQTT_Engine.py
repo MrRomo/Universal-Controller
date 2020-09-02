@@ -4,7 +4,11 @@ class MQTTEngine():
     def __init__(self, broker_addres = ''):
         self.client = mqtt.Client('PC', clean_session=False)
         self.broker_addres = broker_addres
-        
+    
+    def message_stack(self, message):
+        while True:
+            pass
+
     def send_message(self):
         pass
 

@@ -434,6 +434,40 @@
      <string>n/a</string>
     </property>
    </widget>
+   <widget class="QPlainTextEdit" name="message_counter_texbox_2">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>340</x>
+      <y>430</y>
+      <width>131</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="readOnly">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="message_counter_text_2">
+    <property name="geometry">
+     <rect>
+      <x>360</x>
+      <y>410</y>
+      <width>131</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>13</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Frame rate</string>
+    </property>
+   </widget>
    <zorder>label</zorder>
    <zorder>control_selector</zorder>
    <zorder>controller_text</zorder>
@@ -464,6 +498,8 @@
    <zorder>hat_0_0</zorder>
    <zorder>button_9</zorder>
    <zorder>button_8</zorder>
+   <zorder>message_counter_texbox_2</zorder>
+   <zorder>message_counter_text_2</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
