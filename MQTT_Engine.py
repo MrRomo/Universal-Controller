@@ -1,22 +1,19 @@
 import paho.mqtt.client as mqtt
 
 class MQTTEngine():
-    def __init__(self, broker_addres = ''):
+    def __init__(self, broker_addres = '', console = 'none'):
         self.client = mqtt.Client('PC', clean_session=False)
         self.broker_addres = broker_addres
+        self.console = console
+        self.topic = 'testPepper'
     
-    def message_stack(self, message):
-        while True:
-            pass
-
-    def send_message(self):
-        pass
+    def send_message(self, msg):
+        self.console(f"send message {msg}\n")
+        self.client.publish(self.topic, msg, qos=0)
 
     def connect(self):
-        pass
+        self.console(f"Client Connect to {self.broker_addres}\n")
+        self.client.connect(self.broker_addres, keepalive=10000)
 
     def disconnect(self):
-        pass
-
-if __name__ == "__main__":
-    test = MQTTEngine('NUevasss')
+        self.client.disconnect()

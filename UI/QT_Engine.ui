@@ -23,7 +23,7 @@
       <x>100</x>
       <y>20</y>
       <width>161</width>
-      <height>21</height>
+      <height>31</height>
      </rect>
     </property>
     <item>
@@ -53,10 +53,10 @@
    <widget class="QPushButton" name="connect_button">
     <property name="geometry">
      <rect>
-      <x>570</x>
+      <x>690</x>
       <y>20</y>
       <width>111</width>
-      <height>21</height>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
@@ -90,7 +90,7 @@
       <x>410</x>
       <y>20</y>
       <width>131</width>
-      <height>21</height>
+      <height>31</height>
      </rect>
     </property>
     <property name="readOnly">
@@ -434,23 +434,7 @@
      <string>n/a</string>
     </property>
    </widget>
-   <widget class="QPlainTextEdit" name="message_counter_texbox_2">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>340</x>
-      <y>430</y>
-      <width>131</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="readOnly">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QLabel" name="message_counter_text_2">
+   <widget class="QLabel" name="frame_rate">
     <property name="geometry">
      <rect>
       <x>360</x>
@@ -466,6 +450,59 @@
     </property>
     <property name="text">
      <string>Frame rate</string>
+    </property>
+   </widget>
+   <widget class="QPlainTextEdit" name="console">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>470</y>
+      <width>411</width>
+      <height>111</height>
+     </rect>
+    </property>
+    <property name="readOnly">
+     <bool>true</bool>
+    </property>
+    <property name="maximumBlockCount">
+     <number>200</number>
+    </property>
+   </widget>
+   <widget class="QPlainTextEdit" name="broker_addres">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>550</x>
+      <y>20</y>
+      <width>131</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="readOnly">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="frame_rate_textbox">
+    <property name="geometry">
+     <rect>
+      <x>340</x>
+      <y>430</y>
+      <width>121</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>18</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>20</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
     </property>
    </widget>
    <zorder>label</zorder>
@@ -498,8 +535,10 @@
    <zorder>hat_0_0</zorder>
    <zorder>button_9</zorder>
    <zorder>button_8</zorder>
-   <zorder>message_counter_texbox_2</zorder>
-   <zorder>message_counter_text_2</zorder>
+   <zorder>frame_rate</zorder>
+   <zorder>console</zorder>
+   <zorder>broker_addres</zorder>
+   <zorder>frame_rate_textbox</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

@@ -4,40 +4,56 @@ from time import sleep as delay
 
 class Button():
 
-    def __init__(self, name = "N/A", value = "N/A", background = None):
+    def __init__(self, name = "N/A", value = "N/A", button_ui = None):
         self.name = name
         self.value = value
-        self.background = background
+        self.button_ui = button_ui
+        self.background = self.button_ui.setStyleSheet
+        self.pushing = False
+        # self.button_ui.clicked.connect(self.color_change)
+        
     def push(self):
         threading.Thread(target=self.color_change, daemon=True).start()
         return self.value
+
     def color_change(self):
-        self.background.setStyleSheet("background-color: red")
-        delay(.2)
-        self.background.setStyleSheet("background-color: white")
+        if(not (self.pushing)):
+            self.pushing = True
+            self.background("background-color: red")
+            delay(.2)
+            self.background("background-color: white")
+            self.pushing = False
 
 
 
 class Control():
     
-    def __init__(self, map, ui):
+    def __init__(self, map, ui, pub, mqtt):
         self.control_name = 'None'
         self.control_number = 1
         self.ui = ui
+        self.console = pub
+        self.pub_message = mqtt
         self.reload_buttons(**map)
-        self.framerate = 20
+        self.framerate = int(self.ui.frame_rate_textbox.text())
+        self.ui.frame_rate_textbox.textChanged.connect(self.update_frame_rate)
         self.init_pygame()
-      
 
+    def update_frame_rate(self):
+        try:
+            self.framerate = int(self.ui.frame_rate_textbox.text())
+        except:
+            self.framerate = 10
 
     def init_buttons(self, buttons):
         # print(buttons)
         for i in range(len(buttons)):
             button_name = f'button_{i}'
-            button_background = getattr(self.ui, button_name)
-            self.buttons.append(
-                Button(button_name,buttons[i],button_background)
-            )
+            button_ui = getattr(self.ui, button_name)
+            button = Button(button_name,buttons[i], button_ui)
+            button_ui.clicked.connect(button.color_change)
+            button.push()
+            self.buttons.append(button)
 
     def init_axis(self, axis):
         # print(axis)
@@ -45,10 +61,10 @@ class Control():
             axis_array = []
             for g in range(len(axis[i])):
                 axis_name = f'axis_{i}_{g}'
-                axis_background = getattr(self.ui, axis_name)
-                axis_array.append(
-                    Button(axis_name,axis[i][g], axis_background)
-                )
+                axis_ui = getattr(self.ui, axis_name)
+                button = Button(axis_name,axis[i][g], axis_ui)
+                button.push()
+                axis_array.append(button)
             self.axis.append(axis_array)
 
     def init_hats(self, hats):
@@ -58,20 +74,19 @@ class Control():
             for g in range(len(hats[i])):
                 hat_name = f'hat_{i}_{g}'
                 hat_background = getattr(self.ui, hat_name)
-                hats_array.append(
-                    Button(hat_name, hats[i][g], hat_background)
-                )
+                button = Button(hat_name, hats[i][g], hat_background)
+                button.push()
+                hats_array.append(button)
             self.hats.append(hats_array)
 
-    def reload_buttons(self, threshold, buttons, hats, axis):
+    def reload_buttons(self, broker, threshold, buttons, hats, axis):
         self.threshold = threshold
         self.buttons = []
         self.axis = []
         self.hats = []
-        self.init_buttons(buttons)
-        self.init_axis(axis)
-        self.init_hats(hats)
-
+        threading.Thread(target=self.init_buttons, args=(buttons,),  daemon=True).start()
+        threading.Thread(target=self.init_axis, args=(axis,),  daemon=True).start()
+        threading.Thread(target=self.init_hats, args=(hats,),  daemon=True).start()
 
     def init_pygame(self):
         threading.Thread(target=self.pygame_listener, daemon=True).start()
@@ -82,7 +97,7 @@ class Control():
         clock = pygame.time.Clock()
         pygame.joystick.init()
         num = pygame.joystick.get_count()
-        print(f"Gamepads encontrados {num}")
+        self.console(f"Gamepads encontrados {num}\n")
         for i in  range(num):
             print(pygame.joystick.Joystick(i).get_name())
         hecho = False
@@ -120,5 +135,6 @@ class Control():
         pygame.quit()
 
     def send_message(self, message):
-        print(message)
+        self.console(message+'\n')
+        self.pub_message(message)
     
