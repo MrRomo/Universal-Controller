@@ -1,10 +1,12 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from UI.QT_Engine import Ui_MainWindow
 from time import sleep as delay
+from Controller.Control import Control
+
 import threading
 import sys
-import pygame
 import json
+
 class UniversalController():
 
     def __init__(self):
@@ -32,7 +34,7 @@ class UniversalController():
         app_icon.addFile('Logo.jpg', QtCore.QSize(256,256))
         self.MainWindow.setWindowIcon(app_icon)
         self.MainWindow.show()
-
+        self.control = Control(self.map,self.ui)
     
 
 if __name__ == "__main__":

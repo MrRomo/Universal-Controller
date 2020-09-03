@@ -21,8 +21,8 @@
     "axis":[
         ["n/a","n/a"],
         ["n/a","n/a"],
-        ["h_rt","h_lf"],
-        ["h_dw","h_up"]
+        ["h_lf","h_rt"],
+        ["h_up","h_dw"]
     ]
 
 }
