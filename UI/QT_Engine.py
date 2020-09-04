@@ -9,6 +9,11 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import QApplication, QWidget, QInputDialog, QLineEdit
+import sys
+from PyQt5.QtWidgets import QApplication, QWidget, QInputDialog, QLineEdit
+from PyQt5.QtGui import QIcon
+from .button_dialog import Dialog as Ui_Dialog 
 
 
 class Ui_MainWindow(object):
@@ -132,10 +137,10 @@ class Ui_MainWindow(object):
         self.console.setReadOnly(True)
         self.console.setMaximumBlockCount(200)
         self.console.setObjectName("console")
-        self.broker_addres = QtWidgets.QPlainTextEdit(self.centralwidget)
+        self.broker_addres = QtWidgets.QLineEdit(self.centralwidget)
         self.broker_addres.setEnabled(True)
         self.broker_addres.setGeometry(QtCore.QRect(550, 20, 131, 31))
-        self.broker_addres.setReadOnly(True)
+        self.broker_addres.setReadOnly(False)
         self.broker_addres.setObjectName("broker_addres")
         self.frame_rate_textbox = QtWidgets.QLineEdit(self.centralwidget)
         self.frame_rate_textbox.setGeometry(QtCore.QRect(340, 430, 121, 31))
@@ -223,3 +228,41 @@ class Ui_MainWindow(object):
         self.button_8.setText(_translate("MainWindow", "n/a"))
         self.frame_rate.setText(_translate("MainWindow", "Frame rate"))
         self.frame_rate_textbox.setText(_translate("MainWindow", "20"))
+
+    
+class DialogApp(QWidget):
+
+    def __init__(self):
+        super().__init__()
+        self.title = 'PyQt5 input dialogs - pythonspot.com'
+        self.left = 10
+        self.top = 10
+        self.width = 640
+        self.height = 480
+        self.initUI()
+    
+    def initUI(self):
+        self.setWindowTitle(self.title)
+        self.setGeometry(self.left, self.top, self.width, self.height)
+        
+    def getInteger(self, num):
+        i, okPressed = QInputDialog.getInt(self, "Get integer","Percentage:", num, 0, 100, 4)
+        if okPressed:
+            print(i)
+
+    def getDouble(self):
+        d, okPressed = QInputDialog.getDouble(self, "Get double","Value:", 10.50, 0, 100, 10)
+        d, okPressed = QInputDialog.getDouble(self, "Get double","Value:", 10.50, 0, 100, 10)
+        if okPressed:
+            print(d)
+        
+    def getChoice(self):
+        items = ("Red","Blue","Green")
+        item, okPressed = QInputDialog.getItem(self, "Get item","Color:", items, 0, False)
+        if okPressed and item:
+            print(item)
+
+    def getText(self,text):
+        text, okPressed = QInputDialog.getText(self, "Get text", text.name, QLineEdit.Normal, text.value)
+        if okPressed and text != '':
+            print(text)

@@ -25,7 +25,7 @@ class ConsoleManager():
         self.console_thread = QueueThread()
         self.console_thread.change_value.connect(self.updateConsole)
         self.console_thread.start()
-        delay(.01)
+        delay(.1)
         self.pub('Starting Console Manager\n')
 
     def pub (self, msg):

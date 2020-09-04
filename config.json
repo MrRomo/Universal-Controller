@@ -1,7 +1,7 @@
 {
     "broker": "broker.hivemq.com",
     "threshold":0.52,    
-    "buttons":[
+    "button":[
         "std",
         "sp1",
         "sp2",
@@ -15,7 +15,7 @@
         "n/a",
         "h_ct"
     ],
-    "hats":[
+    "hat":[
         ["n/a","n/a"],
         ["bw|(30,0,0)","fw|(-30,0,0)"]
     ],

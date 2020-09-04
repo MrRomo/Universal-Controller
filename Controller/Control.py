@@ -1,16 +1,16 @@
 import pygame
 import threading
 from time import sleep as delay
-
+from functools import partial
 class Button():
 
-    def __init__(self, name = "N/A", value = "N/A", button_ui = None):
+    def __init__(self, name, value, button_ui, ui):
         self.name = name
         self.value = value
         self.button_ui = button_ui
         self.background = self.button_ui.setStyleSheet
         self.pushing = False
-        # self.button_ui.clicked.connect(self.color_change)
+        self.button_ui.clicked.connect(partial(ui.dialog.getText, self))
         
     def push(self):
         threading.Thread(target=self.color_change, daemon=True).start()
@@ -23,8 +23,6 @@ class Button():
             delay(.2)
             self.background("background-color: white")
             self.pushing = False
-
-
 
 class Control():
     
@@ -46,11 +44,10 @@ class Control():
             self.framerate = 10
 
     def init_buttons(self, buttons):
-        # print(buttons)
         for i in range(len(buttons)):
             button_name = f'button_{i}'
             button_ui = getattr(self.ui, button_name)
-            button = Button(button_name,buttons[i], button_ui)
+            button = Button(button_name,buttons[i], button_ui, self.ui)
             button_ui.clicked.connect(button.color_change)
             button.push()
             self.buttons.append(button)
@@ -62,7 +59,7 @@ class Control():
             for g in range(len(axis[i])):
                 axis_name = f'axis_{i}_{g}'
                 axis_ui = getattr(self.ui, axis_name)
-                button = Button(axis_name,axis[i][g], axis_ui)
+                button = Button(axis_name,axis[i][g], axis_ui, self.ui)
                 button.push()
                 axis_array.append(button)
             self.axis.append(axis_array)
@@ -73,20 +70,20 @@ class Control():
             hats_array = []
             for g in range(len(hats[i])):
                 hat_name = f'hat_{i}_{g}'
-                hat_background = getattr(self.ui, hat_name)
-                button = Button(hat_name, hats[i][g], hat_background)
+                hat_ui = getattr(self.ui, hat_name)
+                button = Button(hat_name, hats[i][g], hat_ui, self.ui)
                 button.push()
                 hats_array.append(button)
             self.hats.append(hats_array)
 
-    def reload_buttons(self, broker, threshold, buttons, hats, axis):
+    def reload_buttons(self, broker, threshold, button, hat, axis):
         self.threshold = threshold
         self.buttons = []
         self.axis = []
         self.hats = []
-        threading.Thread(target=self.init_buttons, args=(buttons,),  daemon=True).start()
+        threading.Thread(target=self.init_buttons, args=(button,),  daemon=True).start()
         threading.Thread(target=self.init_axis, args=(axis,),  daemon=True).start()
-        threading.Thread(target=self.init_hats, args=(hats,),  daemon=True).start()
+        threading.Thread(target=self.init_hats, args=(hat,),  daemon=True).start()
 
     def init_pygame(self):
         threading.Thread(target=self.pygame_listener, daemon=True).start()

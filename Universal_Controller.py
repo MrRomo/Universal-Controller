@@ -1,5 +1,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
-from UI.QT_Engine import Ui_MainWindow
+from PyQt5.QtWidgets import QApplication, QWidget, QInputDialog, QLineEdit
+
+from UI.QT_Engine import Ui_MainWindow, DialogApp
 from time import sleep as delay
 from Controller.Control import Control
 from ConsoleManager import ConsoleManager
@@ -34,17 +36,15 @@ class UniversalController():
         app_icon = QtGui.QIcon()
         app_icon.addFile('Logo.jpg', QtCore.QSize(256,256))
         self.MainWindow.setWindowIcon(app_icon)
+        self.ui.dialog = DialogApp()
         self.MainWindow.show()
         #Start console
         self.console = self.ui.console
         self.console_manager = ConsoleManager(self.console)
         #Start mqtt
-        self.mqtt_engine = MQTTEngine(self.config['broker'], self.console_manager.pub)
-        self.mqtt_engine.connect()
+        self.mqtt_engine = MQTTEngine(self.config['broker'], self.console_manager.pub, self.ui)
         #Start control
         self.control = Control(self.config,self.ui, self.console_manager.pub, self.mqtt_engine.send_message)
-
-
 
 
 if __name__ == "__main__":
