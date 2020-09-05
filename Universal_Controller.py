@@ -35,9 +35,6 @@ class UniversalController():
         self.config = config
         self.save_config()
         self.console_manager.pub('Reload Control\n')
-        # self.control.hecho = True
-        # delay(1)
-        # self.init_control()
 
     def startApp(self):
         self.app = QtWidgets.QApplication(sys.argv)

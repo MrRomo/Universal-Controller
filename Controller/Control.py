@@ -20,7 +20,7 @@ class Button():
         if(not (self.pushing)):
             self.pushing = True
             self.background("background-color: red")
-            delay(.2)
+            delay(.3)
             self.background("background-color: white")
             self.pushing = False
 
