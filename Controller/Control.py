@@ -1,7 +1,7 @@
-import pygame
 import threading
 from time import sleep as delay
 from functools import partial
+
 class Button():
 
     def __init__(self, name, value, button_ui, ui):
@@ -26,16 +26,16 @@ class Button():
 
 class Control():
     
-    def __init__(self, map, ui, pub, mqtt):
-        self.control_name = 'None'
-        self.control_number = 1
+    def __init__(self, config, ui, pub, mqtt):
+        self.control_name = None
+        self.control_number = None
         self.ui = ui
         self.console = pub
         self.pub_message = mqtt
-        self.reload_buttons(**map)
+        self.reload_buttons(**config)
         self.framerate = int(self.ui.frame_rate_textbox.text())
         self.ui.frame_rate_textbox.textChanged.connect(self.update_frame_rate)
-        self.init_pygame()
+        threading.Thread(target=self.pygame_listener, daemon=True).start()
 
     def update_frame_rate(self):
         try:
@@ -85,24 +85,20 @@ class Control():
         threading.Thread(target=self.init_axis, args=(axis,),  daemon=True).start()
         threading.Thread(target=self.init_hats, args=(hat,),  daemon=True).start()
 
-    def init_pygame(self):
-        threading.Thread(target=self.pygame_listener, daemon=True).start()
-
-   
     def pygame_listener(self):
+        import pygame
         pygame.init()
         clock = pygame.time.Clock()
         pygame.joystick.init()
         num = pygame.joystick.get_count()
-        self.console(f"Gamepads encontrados {num}\n")
-        for i in  range(num):
-            print(pygame.joystick.Joystick(i).get_name())
-        hecho = False
-        while not hecho:
-              # PROCESAMIENTO DEL EVENTO
+        self.console(f"Gamepads finded {num}\n")
+        self.hecho = False
+        while not self.hecho:
+            # PROCESAMIENTO DEL EVENTO
+            # if(self.hecho): break
             for evento in pygame.event.get(): 
                 if evento.type == pygame.QUIT: 
-                    hecho = True
+                    self.hecho = True
                 
             joystick = pygame.joystick.Joystick(0)
             joystick.init()

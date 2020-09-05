@@ -16,16 +16,28 @@ class UniversalController():
         self.ports = []
         self.MainWindow = None
         self.ui = None
-        self.map_name = 'config.json'
-        self.config = self.load_map()
+        self.config_name = 'config.json'
+        self.config = self.load_config()
 
-    def load_map(self):
-        with open(self.map_name) as json_file:
+    def load_config(self):
+        with open(self.config_name) as json_file:
             return json.load(json_file)
 
-    def save_map(self):
-        with open(self.map_name, 'w') as f:
-            json.dump(self.config, f)       
+    def save_config(self):
+        with open(self.config_name, 'w') as outfile:
+            json.dump(self.config, outfile)
+        
+    def init_control(self):
+        self.config = self.load_config()
+        self.control = Control(self.config,self.ui, self.console_manager.pub, self.mqtt_engine.send_message)
+        
+    def reload_control(self, config):
+        self.config = config
+        self.save_config()
+        self.console_manager.pub('Reload Control\n')
+        # self.control.hecho = True
+        # delay(1)
+        # self.init_control()
 
     def startApp(self):
         self.app = QtWidgets.QApplication(sys.argv)
@@ -36,16 +48,19 @@ class UniversalController():
         app_icon = QtGui.QIcon()
         app_icon.addFile('Logo.jpg', QtCore.QSize(256,256))
         self.MainWindow.setWindowIcon(app_icon)
-        self.ui.dialog = DialogApp()
         self.MainWindow.show()
+        
         #Start console
-        self.console = self.ui.console
-        self.console_manager = ConsoleManager(self.console)
-        #Start mqtt
+        self.console_manager = ConsoleManager(self.ui.console)
+        
+        # Start Dialog
+        self.ui.dialog = DialogApp(self.reload_control, self.config, self.console_manager.pub)
+        
+        #Start MQTT
         self.mqtt_engine = MQTTEngine(self.config['broker'], self.console_manager.pub, self.ui)
-        #Start control
-        self.control = Control(self.config,self.ui, self.console_manager.pub, self.mqtt_engine.send_message)
 
+        #Start control
+        threading.Thread(target=self.init_control, daemon=True).start()
 
 if __name__ == "__main__":
 

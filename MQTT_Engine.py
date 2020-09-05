@@ -18,8 +18,9 @@ class MQTTEngine():
         self.topic = 'testPepper'
     
     def send_message(self, msg):
-        self.console(f"send message {msg}\n")
-        self.client.publish(self.topic, msg, qos=0)
+        if(self.is_connect):
+            self.console(f"send message {msg}\n")
+            self.client.publish(self.topic, msg, qos=0)
 
     def connection(self):
         self.broker_addres = self.broker_addres_ui.text()
